@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<!-- saved from url=(0035)http://rednuht.org/genetic_walkers/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+    <title>HTML5 Genetic Algorithm Biped Walkers</title>
+    <link rel="stylesheet" href="./HTML5 Genetic Algorithm Biped Walkers_files/walkers.css" type="text/css">
+    <script type="text/javascript" async="" src="./HTML5 Genetic Algorithm Biped Walkers_files/ga.js.&#45796;&#50868;&#47196;&#46300;"></script><script src="./HTML5 Genetic Algorithm Biped Walkers_files/jsbox2d.min.js.&#45796;&#50868;&#47196;&#46300;"></script><style></style>
+    <script src="./HTML5 Genetic Algorithm Biped Walkers_files/walker.js.&#45796;&#50868;&#47196;&#46300;"></script>
+    <script src="./HTML5 Genetic Algorithm Biped Walkers_files/game.js.&#45796;&#50868;&#47196;&#46300;"></script>
+    <script src="./HTML5 Genetic Algorithm Biped Walkers_files/floor.js.&#45796;&#50868;&#47196;&#46300;"></script>
+    <script src="./HTML5 Genetic Algorithm Biped Walkers_files/draw.js.&#45796;&#50868;&#47196;&#46300;"></script>
+    <script src="./HTML5 Genetic Algorithm Biped Walkers_files/interface.js.&#45796;&#50868;&#47196;&#46300;"></script>
+    <script>
+
+      function init() {
+        gameInit();
+      }
+
+      window.addEventListener("load", init, false);
+
+    </script>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-25432661-3']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+  <style></style></head>
+  <body>
+    <div id="main_holder">
+      <h1>Genetic Algorithm Walkers</h1>
+      <h3 id="page_quote">"Nice me-and-my-friends-leaving-the-bar-at-2am simulator!"</h3>
+      <canvas id="main_screen" width="800" height="350"></canvas>
+      <div id="generation_timer"><div id="generation_timer_bar" style="width: 14.4167%;">&nbsp;</div></div>
+
+      <div id="info">
+
+        <div>
+          <h2>Current Generation (<span id="gen_number">16</span>)</h2>
+          <table class="name_list_table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Score</th>
+              </tr>
+            </thead>
+            <tbody id="name_list"><tr class="elite_name"><td class="name">eipuqo mobamu</td><td class="score">206.15</td></tr><tr class="elite_name"><td class="name">eipuno mubumu</td><td class="score">205.57</td></tr><tr><td class="name">eipuqo mubamu</td><td class="score">105.05</td></tr><tr><td class="name">eipuqu noiemu</td><td class="score">4.62</td></tr><tr><td class="name">eisuio mobamu</td><td class="score">103.85</td></tr><tr><td class="name">eiteqo mobama</td><td class="score">205.55</td></tr><tr><td class="name">eipuqo juzari</td><td class="score">2.73</td></tr><tr><td class="name">eosani moyoxi</td><td class="score">105.03</td></tr><tr><td class="name">eipuqu mobana</td><td class="score">106.14</td></tr><tr><td class="name">eosuqo oobimu</td><td class="score">103.45</td></tr><tr><td class="name">eipuno mubamu</td><td class="score">206.40</td></tr><tr><td class="name">eiiapi muyamu</td><td class="score">1.74</td></tr><tr><td class="name">eumuqo moiamu</td><td class="score">4.66</td></tr><tr><td class="name">eopuno moiumu</td><td class="score">206.48</td></tr><tr><td class="name">eijuqo oozama</td><td class="score">206.29</td></tr><tr><td class="name">eosunu moiema</td><td class="score">4.44</td></tr><tr><td class="name">oemune kenaqa</td><td class="score">1.27</td></tr><tr><td class="name">feiuje foxufe</td><td class="score">3.79</td></tr><tr><td class="name">cabitu liqeju</td><td class="score">1.30</td></tr><tr><td class="name">foxuee diqexi</td><td class="score">1.78</td></tr></tbody>
+          </table>
+        </div>
+
+        <div>
+          <h2>Record History</h2>
+          <table class="name_list_table">
+            <thead>
+              <tr>
+                <th>Gen</th>
+                <th>Name</th>
+                <th>Score</th>
+              </tr>
+            </thead>
+            <tbody id="champ_list">
+            <tr><td class="generation">0</td><td class="name">jinoze padega</td><td class="score">102.91</td></tr><tr><td class="generation">1</td><td class="name">seyeha jukana</td><td class="score">106.57</td></tr><tr><td class="generation">12</td><td class="name">eipupi mebamu</td><td class="score">205.40</td></tr><tr><td class="generation">13</td><td class="name">eisuno mobamu</td><td class="score">206.39</td></tr><tr><td class="generation">14</td><td class="name">eipuqo mobamu</td><td class="score">206.92</td></tr><tr><td class="generation">15</td><td class="name">eipuqo mobamu</td><td class="score">207.04</td></tr></tbody>
+          </table>
+        </div>
+
+        <div id="controls">
+          <h2>Controls</h2>
+          Gene mutation probability
+          <select id="mutation_chance">
+            <option value="0">0%</option>
+            <option value="0.01">1%</option>
+            <option value="0.05">5%</option>
+            <option value="0.1">10%</option>
+            <option value="0.25">25%</option>
+            <option value="0.5">50%</option>
+            <option value="0.75">75%</option>
+            <option value="1">100%</option>
+          </select><br>
+          Gene mutation amount
+          <select id="mutation_amount">
+            <option value="0">0%</option>
+            <option value="0.01">1%</option>
+            <option value="0.05">5%</option>
+            <option value="0.1">10%</option>
+            <option value="0.25">25%</option>
+            <option value="0.5">50%</option>
+            <option value="0.75">75%</option>
+            <option value="1">100%</option>
+          </select><br>
+          Champions to copy
+          <select id="elite_clones"><option value="0" label="0"></option><option value="1" label="1"></option><option value="2" label="2"></option><option value="3" label="3"></option><option value="4" label="4"></option><option value="5" label="5"></option><option value="6" label="6"></option><option value="7" label="7"></option><option value="8" label="8"></option><option value="9" label="9"></option><option value="10" label="10"></option><option value="11" label="11"></option><option value="12" label="12"></option><option value="13" label="13"></option><option value="14" label="14"></option><option value="15" label="15"></option><option value="16" label="16"></option><option value="17" label="17"></option><option value="18" label="18"></option><option value="19" label="19"></option><option value="20" label="20"></option></select><br>
+          Motor noise
+          <select id="motor_noise">
+            <option value="0">0%</option>
+            <option value="0.01">1%</option>
+            <option value="0.02">2%</option>
+            <option value="0.03">3%</option>
+            <option value="0.04">4%</option>
+            <option value="0.05">5%</option>
+            <option value="0.1">10%</option>
+          </select><br>
+          Round length
+          <select id="round_length">
+            <option value="300">Very short</option>
+            <option value="600">Short</option>
+            <option value="1200">Regular</option>
+            <option value="1800">Long</option>
+            <option value="2400">Looooong</option>
+          </select><br>
+          Animation quality
+          <select id="draw_fps">
+            <option value="0">none</option>
+            <option value="10">10 fps</option>
+            <option value="30">30 fps</option>
+            <option value="60">60 fps</option>
+          </select><br>
+          Simulation speed
+          <select id="simulation_fps">
+            <option value="0">Pause</option>
+            <option value="30">30</option>
+            <option value="60">60</option>
+            <option value="120">120</option>
+            <option value="1000">1000</option>
+          </select><br>
+          <br>
+          Lower the animation quality and simulation speed to save some CPU.<br><br>
+          Zero frames per second and high simulation speed will give you the fastest results, but processor usage will go up as well.
+        </div>
+
+        <div id="about">
+          <h2>About</h2>
+          <h4>What the hell is this?</h4>
+          This observational pastime hopes to evolve walking creatures through genetic algorithms.
+          <br><br>
+
+          <h4>Who comes up with these names?</h4>
+          The names are generated based on each creature's genome. Since the genetic algorithm tends to produce
+          creatures with similar genes, two creatures with similar names will have similar traits.
+          <br><br>
+          Sometimes two creatures can have the same name by coincidence, as there are nearly infinite genome
+          possibilities and limited numbers of letters in each name. Much like two people in real life with the same
+          name, that doesn't mean they will behave the same.
+          <br><br>
+          Apologies in advance for any dirty words spelled by accident. Bad genome. :)
+          <br><br>
+
+          <h4>How is the score calculated?</h4>
+          In order to promote upright walking, each creature receives points based on how high the head is in
+          relation to its feet, and how much it advances while upright. Bonus points are given for each proper
+          step forward.
+          <br><br>
+
+          <h4>Can I give you riches and wealth?</h4>
+          Yes, but I'll use them to buy coffee.<br>
+          <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+            <input type="hidden" name="cmd" value="_s-xclick">
+            <input type="hidden" name="hosted_button_id" value="8HTQYLZV8ALMQ">
+            <input type="image" src="./HTML5 Genetic Algorithm Biped Walkers_files/btn_donate_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+            <img alt="" border="0" src="./HTML5 Genetic Algorithm Biped Walkers_files/pixel.gif" width="1" height="1" hidden="" style="display: none !important;">
+          </form>
+          <br>
+
+          <h4>Who made this?</h4>
+          This exercise in pointless science is brought to you by <a href="http://rednuht.org/">rednuht.org</a> (which
+          is really just one guy).
+          <br><br>
+          Physics engine brought to you by the amazing <a href="http://box2d.org/">Erin Catto</a>, I'm using the
+          very nice <a href="https://code.google.com/p/jsbox2d/">JS port by Paril</a>.
+          <br><br>
+          Additional code by Leif Johnson.
+          <br><br>
+
+          <h4>It looks broken on my browser!</h4>
+          Your browser broke my toy! Make it pay!
+          <br><br>
+
+          <h4>I'm a Computer Science snob and your approach to genetic algorithms is flawed.</h4>
+          But it's fun, ain't it? :)
+          <br><br>
+
+          <h4>I hate boxy humanoids, can I have misshapen cars instead?</h4>
+          <a href="http://rednuht.org/genetic_cars_2/">Glad you asked</a>!
+          <br><br>
+        </div>
+
+      </div>
+
+
+    </div>
+    <img id="hidden_ss" src="./HTML5 Genetic Algorithm Biped Walkers_files/screenshot.png">
+  
+
+<canvas id="__gesture_canvas__" width="0" height="0" style="z-index: 100000000; position: fixed; background: transparent !important; top: 0px; left: 0px;"></canvas><span id="__gesture_preview__" style="z-index: 100000001; position: absolute; background: rgba(255, 255, 225, 0.85); margin: 0px; border: 1px solid black; white-space: nowrap; display: none;"></span></body></html>
