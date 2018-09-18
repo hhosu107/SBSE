@@ -15,7 +15,7 @@ public:
   double getX() const;
   double getY() const;
 
-  double distance(const City& c);
+  double dist(const City& c) const;
 };
 
 #endif

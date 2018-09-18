@@ -1,13 +1,17 @@
 #include"tsp-solver.hpp"
 #include<iostream>
 #include<algorithm>
-#include<functional>
 #include<set> // avoid duplicated cities by set functions
 #include<cstdlib> // note: seed for rand() will be set on main, so ctime is not required
 #include<cstdio> // file IO for debugging
 #define DEBUG 1
 
-using namespace std;
+using std::vector;
+using std::endl;
+using std::cout;
+using std::set;
+using std::random_shuffle;
+
 
 Genome::Genome(int cityCount){ // initialize by random visiting order
   for(int i=0; i<cityCount; i++)
@@ -16,17 +20,17 @@ Genome::Genome(int cityCount){ // initialize by random visiting order
 }
 
 Genome::Genome(const vector<int> &visit){ // initialize by predefined visiting order
-  genome = visit.genome;
+  genome = visit;
 }
 
 Genome::~Genome(){
 }
 
-void Genome::computeTSPLength(const vector<City>& cities){ // length of the visiting order
+void Genome::computeTSPLength(const vector<City> &cities){ // length of the visiting order
   int cityCount = genome.size();
-  tspLength = cities[genome.front()].distance(cities[genome.end()]);
-  for(int i=0; i<cityCount-1; i++)
-    tspLength += cities[genome[i]].distance(cities[genome[i+1]]);
+  tspLength = (cities[genome[0]]).dist(cities[genome[cityCount-1]]);
+  for(unsigned int i=0; i<cityCount-1; i++)
+    tspLength += (cities[genome[i]]).dist(cities[genome[i+1]]);
 }
 
 vector<int> Genome::getGenome() const{ // return the order as a vector
@@ -57,13 +61,13 @@ Genome crossover(const Genome &g1, const Genome &g2){
   vector<int> childGenome = vector<int>(cityCount);
   set<int> g1Preserving;
   int start = (rand() % cityCount);
-  int length = 2 + (rand % (cityCount - 2));
+  int length = 2 + (rand() % (cityCount - 2));
   for(int i=0; i<length; i++){
     childGenome[(start + i) % cityCount] = g1Genome[(start + i) % cityCount];
     g1Preserving.insert(g1Genome[(start + i) % cityCount]);
   }
   int childIndex = (start + length) % cityCount;
-  for(const &auto city : g2Genome){
+  for(const auto& city : g2Genome){
     bool isInserted = (g1Preserving.find(city) != g1Preserving.end());
     if(!isInserted){
       childGenome[childIndex++] = city;
@@ -111,7 +115,7 @@ Genome getOptimizedTravel(const vector<City> &cities,
 
     // mutation (note that the selected <keep> parents won't be mutated)
     for(int j=0; j<mutation; j++){
-      int index = (rand % (population - keep)) + keep;
+      int index = (rand() % (population - keep)) + keep;
       pool[index].mutation();
     }
     if(DEBUG == 1){

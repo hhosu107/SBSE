@@ -11,6 +11,9 @@ City::City(double x, double y){
   cy = y;
 }
 
+City::~City(){
+}
+
 void City::setX(double x){
   cx = x;
 }
@@ -27,7 +30,7 @@ double City::getY() const{
   return cy;
 }
 
-double City::distance(const City& t){
+double City::dist(const City& t) const{
   double tx = t.getX();
   double ty = t.getY();
   return sqrt((cx - tx) * (cx - tx) + (cy - ty) * (cy - ty));

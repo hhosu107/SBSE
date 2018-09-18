@@ -18,7 +18,7 @@ public:
   vector<int> getGenome() const; // return genome order
   double getTSPLength() const; // return genome length
   void mutation(); // mutate some visiting order by swapping two cities
-}
+};
 
 Genome crossover(const Genome &g1, const Genome &g2); // crossover operator
 bool isShorter(const Genome &g1, const Genome &g2); // compare tspLength of two candidates to sort genomes
@@ -28,3 +28,5 @@ Genome getOptimizedTravel(const vector<City> &cities,
                           int keep,
                           int mutation
     ); // called by main function
+
+#endif
