@@ -64,7 +64,8 @@ void help(){
 int main(int argc, char **argv){
   // int population, fitness, keep, mutation; // followed by -p/-f/-k/-m
   int population, fitness, mutation;
-  double keep;
+  // double keep;
+  int keep;
   char* filename;
 
   // Option parsing: see www.cplusplus.com/forum/articles/13355
@@ -87,8 +88,8 @@ int main(int argc, char **argv){
           i++;
         }
         else if(strcmp(argv[i], "-k") == 0){
-          // keep = atoi(argv[i+1]);
-          keep = atof(argv[i+1]);
+          keep = atoi(argv[i+1]);
+          //keep = atof(argv[i+1]);
           i++;
         }
         else if(strcmp(argv[i], "-m") == 0){
