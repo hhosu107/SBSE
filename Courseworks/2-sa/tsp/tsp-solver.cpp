@@ -176,7 +176,8 @@ Genome getOptimizedTravel(const vector<City> &cities, int population, int fitnes
   int gen = 0;
   //for(int i=0; i<fitness; i++){
   Genome cand = Genome(initial);
-  temperature = 9999.0; // initial temperature
+  // temperature = 9999.0; // initial temperature
+  temperature = 0.000001; // Initial Prim MST based TSP approx
   while(temperature > temperatureLimit){
     cand.SA(cities, mutation);
     double delta = cand.getTSPLength() - initial.getTSPLength();
