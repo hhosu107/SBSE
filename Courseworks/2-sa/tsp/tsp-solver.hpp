@@ -17,10 +17,11 @@ private:
 public:
   /* Genome(int cityCount); // initialize only with number of cities */
   int minKey(int cityCount) const;
-  Genome(const vector<City> &cities); // initialize with predefined visiting order
+  Genome(const vector<City> &cities, int rootIndex); // initialize with prim MST with root
   Genome(const Genome &orig);
   ~Genome();
-  void constructMST(const vector<City>& cities);
+  void constructMST(const vector<City>& cities, int rootIndex); // construct prim MST with root
+  void twoOpt(const vector<City>& cities);
   void SA(const vector<City>& cities, int mutation);
   void computeTSPLength(const vector<City>& cities); // compute length with given order
   vector<int> getGenome() const; // return genome order

@@ -32,16 +32,16 @@ int Genome::minKey(int cityCount) const{
 }
 
 // Construct MST to use it for an approximate TSP tour
-void Genome::constructMST(const vector<City> &cities){
+void Genome::constructMST(const vector<City> &cities, int rootIndex){
   int cityCount = cities.size();
-  key[0] = 0;
-  parent[0] = -1;
+  key[rootIndex] = 0;
+  parent[rootIndex] = -1;
 
   // make MST with size cityCount
   for(int cnt=0; cnt<cityCount; cnt++){
     int u = minKey(cityCount);
     minSpanTreeElmt[u] = true; // include u in the MST
-    if(u != 0) children[parent[u]].push_back(u);
+    if(u != rootIndex) children[parent[u]].push_back(u);
     for(int v=0; v<cityCount; v++){
       if(minSpanTreeElmt[v] == false && (cities[v]).dist(cities[u]) < key[v]){
         parent[v] = u;
@@ -50,14 +50,13 @@ void Genome::constructMST(const vector<City> &cities){
     }
   }
 }
-
 /* Genome::Genome(int cityCount){ // initialize by random visiting order
   for(int i=0; i<cityCount; i++)
     genome.push_back(i);
   random_shuffle(genome.begin(), genome.end()); // shuffle is defined in STL
 }
 */
-Genome::Genome(const vector<City> &cities){
+Genome::Genome(const vector<City> &cities, int rootIndex){
   int cityCount = cities.size();
   genome = vector<int>();
   parent = vector<int>(cityCount, 0);
@@ -66,14 +65,14 @@ Genome::Genome(const vector<City> &cities){
   minSpanTreeElmt = vector<bool>(cityCount, false);
 
   // MST
-  constructMST(cities);
+  constructMST(cities, rootIndex);
 
   // preorder traversal to initialize TSP
   vector<int> st = vector<int>(cityCount, -1);
   vector<bool> travel = vector<bool>(cityCount, false);
   int stackTop = 1;
-  st[0] = 0;
-  genome.push_back(0);
+  st[0] = rootIndex;
+  genome.push_back(rootIndex);
   bool flag = false;
   while(stackTop > 0){
     flag = false;
@@ -101,7 +100,6 @@ Genome::Genome(const vector<City> &cities){
   // Now initial genome has been settled.
   computeTSPLength(cities);
 }
-
 /* Genome::Genome(const vector<int> &visit){ // initialize by predefined visiting order
   genome = visit;
 }
@@ -134,13 +132,29 @@ void Genome::SA(const vector<City> &cities, int mutation){
       city1 = city2;
       city2 = temp;
     }
-    // if(r == 0){ // reverse between two cities
-      // reverse(genome.begin() + city1, genome.begin() + city2);
-    // }
-    //else if(r == 1){ // swap two cities
-    if(r == 1){
-      iter_swap(genome.begin() + city1, genome.begin() + city2); // iter_swap is defined in STL
+    if(r == 0 || r == 1){ // reverse between two cities
+      reverse(genome.begin() + city1, genome.begin() + city2);
     }
+    //else if(r == 1){ // swap two cities
+    //if(r == 1){
+    //  iter_swap(genome.begin() + city1, genome.begin() + city2); // iter_swap is defined in STL
+    //}
+  }
+  computeTSPLength(cities);
+}
+
+void Genome::twoOpt(const vector<City> &cities){
+  bool cross = false;
+  for(int i=0; i<cities.size()-2; i++){
+    for(int j=i+2; j<cities.size(); j++){
+      if(cities[genome[i]].dist(cities[genome[i+1]]) + cities[genome[j]].dist(cities[genome[j+1]]) >
+          cities[genome[i]].dist(cities[genome[j]]) + cities[genome[i+1]].dist(cities[genome[j+1]])){
+        reverse(genome.begin() + i, genome.begin() + (j+1));
+        cross = true;
+        break;
+      }
+    }
+    if(cross) break;
   }
   computeTSPLength(cities);
 }
@@ -163,7 +177,7 @@ double Genome::getTSPLength() const{ // return the length; this function will be
 Genome getOptimizedTravel(const vector<City> &cities, int population, int fitness, double keep, int mutation){
   /* use keep as temperature decrease rate, mutation as count of mutation for each perturbation */
   FILE * recording = fopen("debug.txt", "w");
-  Genome initial(cities);
+  Genome initial(cities, 0);
   /*
   int cityCount = cities.size();
   parent = vector<int>(cityCount);
@@ -176,18 +190,25 @@ Genome getOptimizedTravel(const vector<City> &cities, int population, int fitnes
   int gen = 0;
   //for(int i=0; i<fitness; i++){
   Genome cand = Genome(initial);
-  // temperature = 9999.0; // initial temperature
-  temperature = 0.000001; // Initial Prim MST based TSP approx
+  temperature = initial.getTSPLength()/16.0; // initial temperature
+  // temperature = 0.000001; // Initial Prim MST based TSP approx
+  if(DEBUG == 1){
+    fprintf(recording, "Generation 0: shortest length found %.2f.\n", initial.getTSPLength());
+  }
   while(temperature > temperatureLimit){
-    cand.SA(cities, mutation);
+    cand.twoOpt(cities);
+    // cand.SA(cities, mutation);
+    
     double delta = cand.getTSPLength() - initial.getTSPLength();
-    if(delta < 0 || (delta > 0 && getProb(delta, temperature) > ((double)rand() / (RAND_MAX))) ){
+    //if(delta < 0 || (delta > 0 && getProb(delta, temperature) > ((double)rand() / (RAND_MAX))) ){
+    if(delta < 0){
       initial = cand;
     }
     temperature *= keep;
     gen++;
     if(DEBUG == 1){
-      fprintf(recording, "Generation %d: shortest length found %.2f\n", gen, initial.getTSPLength());
+      fprintf(recording, "Generation %d: shortest length found %.2f. 2-Opt applied: %s\n", gen, initial.getTSPLength(), (delta < 0.0 ? "true" : "false"));
+      // fprintf(recording, "Generation %d: shortest length found %.2f\n", gen, initial.getTSPLength());
     }
   }
   //}
