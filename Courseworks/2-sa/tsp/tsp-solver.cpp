@@ -287,15 +287,19 @@ Genome getOptimizedTravel(const vector<City> &cities, int population, int fitnes
   vector<Genome> pool;
   int cityCount = cities.size();
   // uniform_int_distribution<size_t> rngOffset(0, cityCount-1);
+  Genome initial(cities, 0);
   for(int i=0; i<population; i++){
     // Genome initial(cities, rand() % cityCount);
-    Genome initial(cities, 0);
-    pool.push_back(initial);
+    // Genome initial(cities, 0);
+    pool.push_back(initial); // start with identical parents, but mixing them makes difference
   }
   for(int i=0; i<fitness; i++){
     for(Genome& genome : pool)
       genome.computeTSPLength(cities);
     sort(pool.begin(), pool.end(), isShorter); // sort by length
+    for(int j=1; j<population; j++){ // for non-best but sufficiently good ones, just optimize with twoOpt
+      pool[j].twoOpt(cities, mutation - (mutation * i / fitness));
+    }
 
     // keep <keep> best genomes, and generate others by mixing <keep> best genomes
     for(int j=keep; j<population; j+=2){
