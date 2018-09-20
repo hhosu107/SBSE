@@ -22,10 +22,6 @@ std::random_device rd;
 std::default_random_engine RNG(rd());
 
 // MST computation using prim's algorithm
-double getProb(double diff, double temperature){
-  return exp(-1*diff/temperature);
-}
-
 int Genome::minKey(int cityCount) const{
   double min = 2147483647.0;
   int minIndex;
