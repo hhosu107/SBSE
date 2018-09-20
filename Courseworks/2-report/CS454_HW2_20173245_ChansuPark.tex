@@ -207,7 +207,7 @@ Here are some intermediate results:
 \end{align*}
 And I also noticed that the length didn't decrease from Generation 193. It seems that 2-Opt optimization for solutions reached a limit so that no optimization will occur for the best $k$ keeping parents, and the partial optimization for children may not exceed the parents. \\
 For the smaller instances like \texttt{pr76.tsp}, some noticible breakthroughs has occurred at once per 100-200 generations. If I started a little bit earlier, then I might be able to performing more intense optimization for children will help them to break parent pool and test them. Or maybe some breakthrough will be present after some more generation.
-I inserted \texttt{debug.txt} for the instance for the leaderboard and \texttt{debug-pr76.txt} for the \texttt{pr76.tsp} instance in the folder \texttt{./tsp}.
+I inserted \texttt{debug-rl11849.txt} for the instance for the leaderboard and \texttt{debug-pr76.txt} for the \texttt{pr76.tsp} instance in the folder \texttt{./tsp}.
 
 \section{To debug and find intermediate results}
 In \texttt{tsp-main.cpp} and \texttt{tsp-solver.cpp}, there is a define statement: \texttt{\#define DEBUG ...}. If you set this as 1, it prints every 5th intermediate tours and length for every generation, so you can observe them for large dataset. It also picks its metadata.
