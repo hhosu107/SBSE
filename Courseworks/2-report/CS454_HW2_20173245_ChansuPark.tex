@@ -112,7 +112,7 @@ My implementation has 4 options which are mandatory:
 	\item[\texttt{-m}] Decides how many mutation operator will be applied for non-best genes. In reality, the mutation will be reduced as the cumulated number of generation grows.
 \end{itemize}
 To parse the command line, I didn't use such headers like \texttt{unistd.h}, since it depends on the operating system. Instead I parsed manually. \\
-You can find the sample execution command using \texttt{make test}. The name of the executable is \texttt{tsp-solver}. It accepts the file name (relative location) first and accept 4 following options, each with followed positive integer.
+You can find the sample execution command using \texttt{make test}. The name of the executable is \texttt{tsp-solver}. It accepts the file name (relative location) first and accept 4 following options, each with followed positive integer. Note that this command sends standard output to the file \texttt{output.txt}. 
 
 \subsection{Parsing Input} \label{ssec:1.2}
 Since the announcement said that we have to stick on the format that the sample input \texttt{fl11849.txt} has, I followed that one. \\
