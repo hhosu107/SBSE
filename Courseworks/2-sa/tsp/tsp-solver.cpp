@@ -325,6 +325,7 @@ Genome getOptimizedTravel(const vector<City> &cities, int population, int fitnes
     }
     if(DEBUG == 1){
       fprintf(recording, "Generation %d: shortest length found %.2f\n", i+1, pool[0].getTSPLength());
+      fflush(recording);
       if(i % 5 == 0){
         vector<int> intermediateVisit = pool[0].getGenome();
         double interLength = pool[0].getTSPLength();
@@ -337,6 +338,8 @@ Genome getOptimizedTravel(const vector<City> &cities, int population, int fitnes
         }
         cout.precision(2);
         interLen << std::fixed << interLength << endl;
+        intermediate.close();
+        interLen.close();
       }
     }
   }
