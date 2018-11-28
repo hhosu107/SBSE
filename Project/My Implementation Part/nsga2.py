@@ -23,6 +23,7 @@
 '''
 
 import sys, random
+from operator import itermgetter, attrgetter
 
 class Solution:
     '''
@@ -127,7 +128,7 @@ class NSGAII:
         Q = []
         
         for i in range(num_generations):
-            print "Iteracao ", i
+            print ("Iteracao ", i)
              
             R = []
             R.extend(P)
@@ -154,25 +155,31 @@ class NSGAII:
                 
             Q = self.make_new_pop(P)
             
-    def sort_ranking(self, P):
-        for i in range(len(P) - 1, -1, -1):
-            for j in range(1, i + 1):
-                s1 = P[j - 1]
-                s2 = P[j]
-                
-                if s1.rank > s2.rank:
-                    P[j - 1] = s2
-                    P[j] = s1
-                    
-    def sort_objective(self, P, obj_idx):
-        for i in range(len(P) - 1, -1, -1):
-            for j in range(1, i + 1):
-                s1 = P[j - 1]
-                s2 = P[j]
-                
-                if s1.objectives[obj_idx] > s2.objectives[obj_idx]:
-                    P[j - 1] = s2
-                    P[j] = s1
+     def sort_ranking(self, P):
+         # P.sort(key=attrgetter('rank'))
+         P = sorted(P, key=attrgetter('rank'))
+
+     def sort_objective(self, P, obj_idx):
+         # P = sorted(P, key=lambda s: s.objectives[obj_idx])
+         for i in range(len(P) - 1, -1, -1):
+             for j in range(1, i + 1):
+                 s1 = P[j - 1]
+                 s2 = P[j]
+
+                 if s1.objectives[obj_idx] > s2.objectives[obj_idx]:
+                     P[j - 1] = s2
+                     P[j] = s1
+
+     def sort_crowding(self, P):
+         for i in range(len(P) - 1, -1, -1):
+             for j in range(1, i + 1):
+                 s1 = P[j - 1]
+                 s2 = P[j]
+
+                 if crowded_comparison(s1, s2) < 0:
+                     P[j - 1] = s2
+                     P[j] = s1
+
                     
     def sort_crowding(self, P):
         for i in range(len(P) - 1, -1, -1):
